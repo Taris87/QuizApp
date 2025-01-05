@@ -1,7 +1,6 @@
 {
   "name": "quiz-app",
   "private": true,
-  "homepage": "https://taris87.github.io/QuizApp",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
