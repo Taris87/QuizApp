@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Quiz, Question } from "../types/quiz";
 import { saveCustomQuiz, updateCustomQuiz } from "../services/quizService";
-import { PlusCircle, Save } from "lucide-react";
+import { PlusCircle, Save, Trash } from "lucide-react";
 
 interface CreateQuizProps {
   onQuizCreated: () => void;
@@ -20,6 +20,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
     text: "",
     options: ["", "", "", ""],
     correctAnswer: 0,
+    description: "",
   });
 
   const addQuestion = () => {
@@ -30,9 +31,10 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
 
     const newQuestion: Question = {
       id: `custom-${Date.now()}`,
-      text: currentQuestion.text,
+      text: currentQuestion.text + " ?",
       options: currentQuestion.options,
       correctAnswer: currentQuestion.correctAnswer,
+      description: currentQuestion.description,
     };
 
     setQuestions([...questions, newQuestion]);
@@ -40,6 +42,7 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
       text: "",
       options: ["", "", "", ""],
       correctAnswer: 0,
+      description: "",
     });
   };
 
@@ -130,7 +133,18 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
             />
           </div>
         ))}
-
+        <input
+          type="text"
+          placeholder="Erklärung (optional)"
+          value={currentQuestion.description}
+          onChange={(e) =>
+            setCurrentQuestion({
+              ...currentQuestion,
+              description: e.target.value,
+            })
+          }
+          className="w-full p-2 border rounded-lg mb-4 break-words whitespace-normal overflow-hidden"
+        />
         <button
           onClick={addQuestion}
           className="mt-4 flex items-center justify-center w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
@@ -147,39 +161,41 @@ export const CreateQuiz: React.FC<CreateQuizProps> = ({
       </div>
 
       {questions.length > 0 && (
-        <div className="mt-8 border-t pt-6">
-          <h3 className="text-lg font-semibold mb-4">Hinzugefügte Fragen</h3>
-          {questions.map((question, index) => (
-            <div
-              key={question.id}
-              className="mb-4 p-4 border rounded-lg bg-gray-50">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="font-medium">{question.text}</p>
-                  <ul className="mt-2 space-y-1">
-                    {question.options.map((option, optIndex) => (
-                      <li
-                        key={optIndex}
-                        className={
-                          optIndex === question.correctAnswer
-                            ? "text-green-600 font-medium"
-                            : ""
-                        }>
-                        {option}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <button
-                  onClick={() => removeQuestion(index)}
-                  className="ml-4 text-red-600 hover:text-red-700">
-                  <span className="sr-only">Frage löschen</span>×
-                </button>
-              </div>
-            </div>
-          ))}
+  <div className="mt-8 border-t pt-6">
+    <h3 className="text-lg font-semibold mb-4">Hinzugefügte Fragen</h3>
+    {questions.map((question, index) => (
+      <div
+        key={question.id}
+        className="mb-4 p-4 border rounded-lg bg-gray-50">
+        <div className="flex justify-between items-start">
+          <div className="flex-1 max-w-full"> 
+            <p className="font-medium">{question.text}</p>
+            <ul className="mt-2 space-y-1">
+              {question.options.map((option, optIndex) => (
+                <li
+                  key={optIndex}
+                  className={
+                    optIndex === question.correctAnswer
+                      ? "text-green-600 font-medium"
+                      : ""
+                  }>
+                  {option}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-gray-600 break-words whitespace-normal overflow-hidden max-w-[calc(100%-2rem)]">{question.description}</p>
+          </div>
+          <button
+            onClick={() => removeQuestion(index)}
+            className="mr-0 text-red-600 hover:text-red-700 ">
+            <span className="sr-only">Frage löschen</span>
+            <Trash className="h-5 w-5" />
+          </button>
         </div>
-      )}
+      </div>
+    ))}
+  </div>
+)}
     </div>
   );
 };

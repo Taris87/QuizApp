@@ -4,7 +4,7 @@ export const saveQuizProgress = (
   userId: string,
   quizId: string,
   questionId: string,
-  isCorrect: boolean
+  isCorrect: boolean,
 ) => {
   const key = `quiz_progress_${userId}`;
   const progress = JSON.parse(localStorage.getItem(key) || "{}");
